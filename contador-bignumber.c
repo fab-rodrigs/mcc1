@@ -141,9 +141,11 @@ int main(void)
                 escreve_BIG(0x8B,0);
                 escreve_BIG(0x8E,0);
                 if((P1IN & 0b00000010) == 0)
+                {
                     state = 1;
-                while((P1IN & 0b00000010) == 0);  // Aguarda até que o botão seja solto, mantendo o loop
-                for(i = 10000; i > 0; i--);         // Delay simples para debounce do botão
+                    while((P1IN & 0b00000010) == 0);  // Aguarda até que o botão seja solto, mantendo o loop
+                    for(i = 10000; i > 0; i--);         // Delay simples para debounce do botão
+                }
                 break;
             case 1:
                 for(i = 0; i < 10; i++){
@@ -155,8 +157,11 @@ int main(void)
                             __delay_cycles(10000);
 
                             // Verificação do botão foi pressionado novamente
-                            if((P1IN & 0b00000010) == 0) {
+                            if((P1IN & 0b00000010) == 0)
+                            {
                                 state = 2;
+                                while((P1IN & 0b00000010) == 0);  // Aguarda até que o botão seja solto, mantendo o loop
+                                for(i = 10000; i > 0; i--);         // Delay simples para debounce do botão
                                 break; // Sai do loop
                             }
                             // Verificação do botão reset foi pressionado
