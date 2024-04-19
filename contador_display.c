@@ -104,7 +104,7 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
 int main(void)
 {
     int state = 0;
-    unsigned char k,i,j = 0;
+    unsigned char k,i,j,unidade,dezena,centena = 0;
     unsigned char vet1[] = {1,3,7,15,31,63,127};
     unsigned char teclado[4][4] =  {{'1', '4', '7', '*'},
                                     {'2', '5', '8', '0'},
@@ -141,7 +141,7 @@ int main(void)
                 escreve_BIG(0x88,0);
                 escreve_BIG(0x8B,0);
                 escreve_BIG(0x8E,0);
-              
+
                 if((P1IN & 0b00000010) == 0)
                 {
                     k = 0; // inicia i em 0
@@ -149,7 +149,7 @@ int main(void)
                     while((P1IN & 0b00000010) == 0);  // Aguarda até que o botão seja solto, mantendo o loop
                     for(i = 10000; i > 0; i--);         // Delay simples para debounce do botão
                 }
-              
+
                 break;
             case 1:
                 for(i = k; i <= 999; i++)
@@ -162,7 +162,7 @@ int main(void)
                     escreve_BIG(0x8B, dezena); // Dezena
                     escreve_BIG(0x88, centena); // Centena
                     __delay_cycles(10000);
-    
+
                     // Verificação do botão foi pressionado novamente
                     if((P1IN & 0b00000010) == 0)
                     {
@@ -186,7 +186,7 @@ int main(void)
                 escreve_BIG(0x8E, unidade); // Unidade
                 escreve_BIG(0x8B, dezena); // Dezena
                 escreve_BIG(0x88, centena); // Centena
-              
+
                 if((P1IN & 0b00000010) == 0)
                 {
                     while((P1IN & 0b00000010) == 0);  // Aguarda até que o botão seja solto, mantendo o loop
