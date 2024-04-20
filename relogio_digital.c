@@ -1,3 +1,15 @@
+/*
+ * 1ª. Atividade Avaliativa (MCA20304 – Microcontroladores I)
+ *
+ * Aluno: Fabrício Rodrigues de Santana
+ *
+ * Desenvolva um programa para o MSP430 de maneira a implementar um relógio digital utilizando números grandes
+ * no LCD. Um botão deve modificar o conteúdo da informação apresentada no LCD, de maneira a alternar entre os
+ * valores da data (dd/mm/aa), horário (hh:mm:ss) e cronômetro (sss:ms). Um segundo botão deve ser empregado para
+ * iniciar ou parar a contagem do cronômetro. Ambos os botões devem ser configurados para fazer uso de interrupções.
+ *
+ */
+
 #include <msp430.h> 
 #include "def_principais.h"
 #include "LCD.h"
@@ -60,7 +72,7 @@ const unsigned char novos_caract[]={0b00000001,//0
                                             0b00010000,
                                             0b00011111};
 
-const unsigned char nr_grande[10][4] = { {0x01, 0x02, 0x4C, 0x00}, //nr. 0
+const unsigned char nr_grande[11][4] = { {0x01, 0x02, 0x4C, 0x00}, //nr. 0
                                                 {0x20, 0x7C, 0x20, 0x7C}, //nr. 1
                                                 {0x04, 0x05, 0x4C, 0x5F}, //nr. 2
                                                 {0x06, 0x05, 0x5F, 0x00}, //nr. 3
@@ -69,7 +81,9 @@ const unsigned char nr_grande[10][4] = { {0x01, 0x02, 0x4C, 0x00}, //nr. 0
                                                 {0x07, 0x04, 0x4C, 0x00}, //nr. 5
                                                 {0x06, 0x02, 0x20, 0x03}, //nr. 7
                                                 {0x07, 0x05, 0x4C, 0x00}, //nr. 8
-                                                {0x07, 0x05, 0x20, 0x03}};//nr. 9
+                                                {0x07, 0x05, 0x20, 0x03}, //nr. 9
+                                                {0x04, 0x04, 0x04, 0x04}};//vazio
+
 
 //-----------------------------------------------------------------------------------------------------------
 void cria_novos_caract()//criação dos 8 novos caracteres
@@ -102,6 +116,8 @@ int state = 0;
 
 int main(void)
 {
+    int seg_uni, seg_dez, min_uni, min_dez, hor_uni, hor_dez = 0;
+
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
 
     P6DIR = 0xFF;               // P6.0-P6.3 dedicados aos dados do LCD
@@ -111,7 +127,7 @@ int main(void)
     P1DIR = 0b00000000;         // Define P1.1 como entrada
     P1REN |= 0b00000010;        // Habilita o resistor de pull-up/pull-down para P1.1
     P1OUT |= 0b00000010;        // Configura P1.1 como pull-up (nível alto)
-    P1IES = 0b00000010;         // Configura borda da interrupção no P1.1
+    P1IES = 0b00000000;         // Configura borda da interrupção no P1.1
     P1IE = 0b00000010;          // Habilita interrupção externa no P1.1
 
     // Configura interrupções botão 2 (inicia ou para a contagem do cronômetro)
@@ -140,28 +156,40 @@ int main(void)
                 escreve_BIG(0x8E,0);
                 break;
             case 1:             // data (dd/mm/aa)
-                escreve_BIG(0x80,1);
-                escreve_BIG(0x82,1);
-                escreve_BIG(0x85,2);
-                escreve_BIG(0x88,2);
-                escreve_BIG(0x8B,3);
+                escreve_BIG(0x80,2);
+                escreve_BIG(0x82,0);
+                escreve_BIG(0x85,0);
+                escreve_BIG(0x88,4);
+                escreve_BIG(0x8B,2);
                 escreve_BIG(0x8E,3);
                 break;
             case 2:             // horário (hh:mm:ss)
-                escreve_BIG(0x80,4);
-                escreve_BIG(0x82,4);
-                escreve_BIG(0x85,5);
-                escreve_BIG(0x88,5);
-                escreve_BIG(0x8B,6);
-                escreve_BIG(0x8E,6);
+                escreve_BIG(0x80,1);
+                escreve_BIG(0x82,7);
+                escreve_BIG(0x85,min_dez);
+                escreve_BIG(0x88,min_uni);
+                escreve_BIG(0x8B,seg_dez);
+                escreve_BIG(0x8E,seg_uni);
+                seg_uni++;
+                if(seg_uni>9)
+                {
+                    seg_uni = 0;
+                    seg_dez++;
+                    if(seg_dez>5)
+                    {
+                        seg_dez = 0;
+                        min_uni++;
+                    }
+                }
+                __delay_cycles(10000);
                 break;
             case 3:             // cronômetro (sss:ms)
                 escreve_BIG(0x80,0);
-                escreve_BIG(0x82,7);
-                escreve_BIG(0x85,7);
-                escreve_BIG(0x88,7);
-                escreve_BIG(0x8B,8);
-                escreve_BIG(0x8E,8);
+                escreve_BIG(0x82,0);
+                escreve_BIG(0x85,1);
+                escreve_BIG(0x88,10);
+                escreve_BIG(0x8B,0);
+                escreve_BIG(0x8E,1);
                 break;
         }
     }
@@ -170,10 +198,10 @@ int main(void)
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1(void)
 {
-    state += 1;  // troca estado
+    state++;  // troca estado
     if(state>3)
         state = 1;
-    __delay_cycles(1000);
+    __delay_cycles(10000);
     P1IFG = 0; // limpa historico interrupção
 }
 
