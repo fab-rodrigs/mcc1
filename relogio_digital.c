@@ -107,14 +107,14 @@ int main(void)
     P6DIR = 0xFF;               // P6.0-P6.3 dedicados aos dados do LCD
     P3DIR = 0xFF;               // P3.2-P3.4 dedicados ao controle do LCD
 
-    // configura interrupções botão 1 (alterna o que é mostrado no display)
+    // Configura interrupções botão 1 (alterna o que é mostrado no display)
     P1DIR = 0b00000000;         // Define P1.1 como entrada
     P1REN |= 0b00000010;        // Habilita o resistor de pull-up/pull-down para P1.1
     P1OUT |= 0b00000010;        // Configura P1.1 como pull-up (nível alto)
     P1IES = 0b00000010;         // Configura borda da interrupção no P1.1
     P1IE = 0b00000010;          // Habilita interrupção externa no P1.1
 
-    // configura interrupções botão 2 (inicia ou para a contagem do cronômetro)
+    // Configura interrupções botão 2 (inicia ou para a contagem do cronômetro)
     P2DIR = 0b00000000;         // Define P2.1 como entrada
     P2REN |= 0b00000010;        // Habilita o resistor de pull-up/pull-down para P2.1
     P2OUT |= 0b00000010;        // Configura P2.1 como pull-up (nível alto)
@@ -128,16 +128,36 @@ int main(void)
         switch(state)
         {
             case 0:             // início
-                escreve_BIG(0x8E, 0);
+                escreve_BIG(0x80,0);
+                escreve_BIG(0x82,0);
+                escreve_BIG(0x85,0);
+                escreve_BIG(0x88,0);
+                escreve_BIG(0x8B,0);
+                escreve_BIG(0x8E,0);
                 break;
             case 1:             // data (dd/mm/aa)
-                escreve_BIG(0x8E, 1);
+                escreve_BIG(0x80,1);
+                escreve_BIG(0x82,1);
+                escreve_BIG(0x85,2);
+                escreve_BIG(0x88,2);
+                escreve_BIG(0x8B,3);
+                escreve_BIG(0x8E,3);
                 break;
             case 2:             // horário (hh:mm:ss)
-                escreve_BIG(0x8E, 2);
+                escreve_BIG(0x80,4);
+                escreve_BIG(0x82,4);
+                escreve_BIG(0x85,5);
+                escreve_BIG(0x88,5);
+                escreve_BIG(0x8B,6);
+                escreve_BIG(0x8E,6);
                 break;
             case 3:             // cronômetro (sss:ms)
-                escreve_BIG(0x8E, 3);
+                escreve_BIG(0x80,0);
+                escreve_BIG(0x82,7);
+                escreve_BIG(0x85,7);
+                escreve_BIG(0x88,7);
+                escreve_BIG(0x8B,8);
+                escreve_BIG(0x8E,8);
                 break;
         }
     }
