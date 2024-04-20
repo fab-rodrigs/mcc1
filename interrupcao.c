@@ -19,8 +19,8 @@ int main(void)
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1(void)
 {
-    int i;
-    P1OUT ^= 0b00000001;  // piscar LED
-    for(i=1000000; i>0; i--);     //delay
-	P1IFG = 0; // limpa historico interrupção
+    	int i;
+    	P1OUT ^= 0b00000001;  // piscar LED
+    	for(i=1000000; i>0; i--);     //delay
+    	P1IFG = 0; // limpa historico interrupção
 }
