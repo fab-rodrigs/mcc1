@@ -156,7 +156,6 @@ __interrupt void Port_1(void)
 #pragma vector=PORT2_VECTOR
 __interrupt void Port_2(void)
 {
-    P2OUT ^= 0b00000001;  // piscar LED
     __delay_cycles(1000);
     P2IFG = 0; // limpa historico interrupção
 }
