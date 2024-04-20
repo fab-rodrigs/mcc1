@@ -123,6 +123,10 @@ int main(void)
 
     __bis_SR_register(GIE);     // Habilita interrupções globais
 
+    set_bit(CONTR_LCD, BkL);
+    inic_LCD_4bits(); // inicializa o LCD
+    cria_novos_caract();            //cria os 8 novos caracteres
+
     while(1)
     {
         switch(state)
