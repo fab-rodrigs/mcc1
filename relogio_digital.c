@@ -164,8 +164,8 @@ int main(void)
                 escreve_BIG(0x8E,3);
                 break;
             case 2:             // horário (hh:mm:ss)
-                escreve_BIG(0x80,1);
-                escreve_BIG(0x82,7);
+                escreve_BIG(0x80,hor_dez);
+                escreve_BIG(0x82,hor_uni);
                 escreve_BIG(0x85,min_dez);
                 escreve_BIG(0x88,min_uni);
                 escreve_BIG(0x8B,seg_dez);
@@ -179,6 +179,15 @@ int main(void)
                     {
                         seg_dez = 0;
                         min_uni++;
+                        if(min_uni>9)
+                        {
+                            min_uni = 0;
+                            min_dez++;
+                            if(min_dez>5)
+                            {
+                                min_dez = 0;
+                            }
+                        }
                     }
                 }
                 __delay_cycles(10000);
