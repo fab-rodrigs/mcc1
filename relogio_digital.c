@@ -113,11 +113,11 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
 }
 
 int state = 0;
+int seg_uni, seg_dez, min_uni, min_dez, hor_uni, hor_dez = 0;
+int s_uni, s_dez, s_cen, ms_dez, ms_uni = 0;
 
 int main(void)
 {
-    int seg_uni, seg_dez, min_uni, min_dez, hor_uni, hor_dez = 0;
-
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
 
     P6DIR = 0xFF;               // P6.0-P6.3 dedicados aos dados do LCD
@@ -186,19 +186,53 @@ int main(void)
                             if(min_dez>5)
                             {
                                 min_dez = 0;
+                                hor_uni++;
+                                if(hor_uni>9)
+                                {
+                                    hor_uni = 0;
+                                    hor_dez++;
+                                    if(hor_dez>5)
+                                        hor_dez = 5;
+                                }
                             }
                         }
                     }
                 }
-                __delay_cycles(10000);
+                //__delay_cycles(10000);
                 break;
             case 3:             // cronômetro (sss:ms)
-                escreve_BIG(0x80,0);
-                escreve_BIG(0x82,0);
-                escreve_BIG(0x85,1);
+                escreve_BIG(0x80,s_cen);
+                escreve_BIG(0x82,s_dez);
+                escreve_BIG(0x85,s_uni);
                 escreve_BIG(0x88,10);
-                escreve_BIG(0x8B,0);
-                escreve_BIG(0x8E,1);
+                escreve_BIG(0x8B,ms_dez);
+                escreve_BIG(0x8E,ms_uni);
+
+                ms_uni++;
+                if(ms_uni>9)
+                {
+                    ms_uni = 0;
+                    ms_dez++;
+                    if(ms_dez>9)
+                    {
+                        ms_dez = 0;
+                        s_uni++;
+                        if(s_uni>9)
+                        {
+                            s_uni = 0;
+                            s_dez++;
+                            if(s_dez>9)
+                            {
+                                s_dez = 0;
+                                s_cen++;
+                                if(s_cen>9)
+                                {
+                                    s_cen = 9;
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
         }
     }
