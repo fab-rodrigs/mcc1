@@ -82,7 +82,7 @@ const unsigned char nr_grande[11][4] = { {0x01, 0x02, 0x4C, 0x00}, //nr. 0
                                                 {0x06, 0x02, 0x20, 0x03}, //nr. 7
                                                 {0x07, 0x05, 0x4C, 0x00}, //nr. 8
                                                 {0x07, 0x05, 0x20, 0x03}, //nr. 9
-                                                {0x04, 0x04, 0x04, 0x04}};//vazio
+                                                {0x20, 0x20, 0x20, 0x20}};//vazio
 
 
 //-----------------------------------------------------------------------------------------------------------
@@ -139,26 +139,26 @@ int main(void)
     P2DIR = 0b00000000;         // Define P2.1 como entrada
     P2REN |= 0b00000010;        // Habilita o resistor de pull-up/pull-down para P2.1
     P2OUT |= 0b00000010;        // Configura P2.1 como pull-up (nível alto)
-    P2IES = 0b00000010;         // Configura borda da interrupção no P2.1
+    P2IES = 0b00000000;         // Configura borda da interrupção no P2.1
     P2IE = 0b00000010;          // Habilita interrupção externa no P2.1
 
     __bis_SR_register(GIE);     // Habilita interrupções globais
 
     set_bit(CONTR_LCD, BkL);
-    inic_LCD_4bits(); // inicializa o LCD
-    cria_novos_caract();            //cria os 8 novos caracteres
+    inic_LCD_4bits();           // inicializa o LCD
+    cria_novos_caract();        //cria os 8 novos caracteres
 
     while(1)
     {
         switch(state)
         {
             case 0:             // início
-                escreve_BIG(0x80,0);
-                escreve_BIG(0x82,0);
+                escreve_BIG(0x80,10);
+                escreve_BIG(0x82,10);
                 escreve_BIG(0x85,0);
                 escreve_BIG(0x88,0);
-                escreve_BIG(0x8B,0);
-                escreve_BIG(0x8E,0);
+                escreve_BIG(0x8B,10);
+                escreve_BIG(0x8E,10);
                 break;
             case 1:             // data (dd/mm/aa)
                 escreve_BIG(0x80,dia_dez);
@@ -175,6 +175,7 @@ int main(void)
                     dia_dez++;
                     if(dia_dez>2)
                     {
+                        dia_uni = 1;
                         dia_dez = 0;
                         mes_uni++;
                         if(mes_uni>9 && mes_dez==0)
@@ -199,7 +200,7 @@ int main(void)
                         }
                     }
                 }
-                //__delay_cycles(1000000);
+                __delay_cycles(1000000);
                 break;
             case 2:             // horário (hh:mm:ss)
                 escreve_BIG(0x80,hor_dez);
@@ -295,6 +296,6 @@ __interrupt void Port_1(void)
 __interrupt void Port_2(void)
 {
     stop ^= 1;
-    //__delay_cycles(1000);
+    __delay_cycles(10000);
     P2IFG = 0; // limpa historico interrupção
 }
