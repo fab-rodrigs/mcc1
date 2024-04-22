@@ -112,7 +112,7 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
      cmd_LCD(nr_grande[nr][3],1);
 }
 
-int state = 0;
+int state, stop = 0;
 int dia_dez, mes_dez = 0;
 int dia_uni = 1;
 int mes_uni = 4;
@@ -240,33 +240,36 @@ int main(void)
                 //__delay_cycles(10000);
                 break;
             case 3:             // cronômetro (sss:ms)
-                escreve_BIG(0x80,s_cen);
-                escreve_BIG(0x82,s_dez);
-                escreve_BIG(0x85,s_uni);
-                escreve_BIG(0x88,10);
-                escreve_BIG(0x8B,ms_dez);
-                escreve_BIG(0x8E,ms_uni);
-
-                ms_uni++;
-                if(ms_uni>9)
+                if(stop==0)
                 {
-                    ms_uni = 0;
-                    ms_dez++;
-                    if(ms_dez>9)
+                    escreve_BIG(0x80,s_cen);
+                    escreve_BIG(0x82,s_dez);
+                    escreve_BIG(0x85,s_uni);
+                    escreve_BIG(0x88,10);
+                    escreve_BIG(0x8B,ms_dez);
+                    escreve_BIG(0x8E,ms_uni);
+
+                    ms_uni++;
+                    if(ms_uni>9)
                     {
-                        ms_dez = 0;
-                        s_uni++;
-                        if(s_uni>9)
+                        ms_uni = 0;
+                        ms_dez++;
+                        if(ms_dez>9)
                         {
-                            s_uni = 0;
-                            s_dez++;
-                            if(s_dez>9)
+                            ms_dez = 0;
+                            s_uni++;
+                            if(s_uni>9)
                             {
-                                s_dez = 0;
-                                s_cen++;
-                                if(s_cen>9)
+                                s_uni = 0;
+                                s_dez++;
+                                if(s_dez>9)
                                 {
-                                    s_cen = 9;
+                                    s_dez = 0;
+                                    s_cen++;
+                                    if(s_cen>9)
+                                    {
+                                        s_cen = 9;
+                                    }
                                 }
                             }
                         }
@@ -291,6 +294,7 @@ __interrupt void Port_1(void)
 #pragma vector=PORT2_VECTOR
 __interrupt void Port_2(void)
 {
-    __delay_cycles(1000);
+    stop ^= 1;
+    //__delay_cycles(1000);
     P2IFG = 0; // limpa historico interrupção
 }
