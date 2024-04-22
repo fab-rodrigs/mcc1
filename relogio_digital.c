@@ -200,7 +200,7 @@ int main(void)
                         }
                     }
                 }
-                __delay_cycles(1000000);
+                //__delay_cycles(1000000);
                 break;
             case 2:             // horário (hh:mm:ss)
                 escreve_BIG(0x80,hor_dez);
@@ -238,10 +238,16 @@ int main(void)
                         }
                     }
                 }
-                //__delay_cycles(10000);
+                //__delay_cycles(1000000);
                 break;
             case 3:             // cronômetro (sss:ms)
-                if(stop==0)
+                escreve_BIG(0x80,s_cen);
+                escreve_BIG(0x82,s_dez);
+                escreve_BIG(0x85,s_uni);
+                escreve_BIG(0x88,10);
+                escreve_BIG(0x8B,ms_dez);
+                escreve_BIG(0x8E,ms_uni);
+                if(stop)
                 {
                     escreve_BIG(0x80,s_cen);
                     escreve_BIG(0x82,s_dez);
