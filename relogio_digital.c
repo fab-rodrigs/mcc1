@@ -113,6 +113,11 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
 }
 
 int state = 0;
+int dia_dez, mes_dez = 0;
+int dia_uni = 1;
+int ano_dez = 2;
+int mes_uni = 4;
+int ano_uni = 4;
 int seg_uni, seg_dez, min_uni, min_dez, hor_uni, hor_dez = 0;
 int s_uni, s_dez, s_cen, ms_dez, ms_uni = 0;
 
@@ -156,12 +161,52 @@ int main(void)
                 escreve_BIG(0x8E,0);
                 break;
             case 1:             // data (dd/mm/aa)
-                escreve_BIG(0x80,2);
-                escreve_BIG(0x82,0);
-                escreve_BIG(0x85,0);
-                escreve_BIG(0x88,4);
-                escreve_BIG(0x8B,2);
-                escreve_BIG(0x8E,3);
+                escreve_BIG(0x80,dia_dez);
+                escreve_BIG(0x82,dia_uni);
+                escreve_BIG(0x85,mes_dez);
+                escreve_BIG(0x88,mes_uni);
+                escreve_BIG(0x8B,ano_dez);
+                escreve_BIG(0x8E,ano_uni);
+
+                dia_uni++;
+                if(dia_uni>9)
+                {
+                    dia_uni = 0;
+                    dia_dez++;
+                    if(dia_dez>2)
+                    {
+                        dia_dez = 3;
+                        dia_uni = 0;
+                        mes_uni++;
+                        if(dia_dez>=3)
+                        {
+                            dia_dez = 0;
+                            dia_uni = 1;
+                            if(mes_uni>9)
+                             {
+                                 mes_uni = 0;
+                                 mes_dez = 1;
+                                 if(mes_uni>2)
+                                 {
+                                     mes_dez = 0;
+                                     mes_uni = 1;
+                                     ano_uni++;
+                                     if(ano_uni>9)
+                                     {
+                                         ano_uni = 0;
+                                         ano_dez++;
+                                         if(ano_dez>9)
+                                         {
+                                             ano_dez = 9;
+                                         }
+                                     }
+                                 }
+                             }
+                        }
+                    }
+                }
+                //
+                __delay_cycles(1000000);
                 break;
             case 2:             // horário (hh:mm:ss)
                 escreve_BIG(0x80,hor_dez);
@@ -170,6 +215,7 @@ int main(void)
                 escreve_BIG(0x88,min_uni);
                 escreve_BIG(0x8B,seg_dez);
                 escreve_BIG(0x8E,seg_uni);
+
                 seg_uni++;
                 if(seg_uni>9)
                 {
@@ -233,6 +279,7 @@ int main(void)
                         }
                     }
                 }
+                //__delay_cycles(10000);
                 break;
         }
     }
