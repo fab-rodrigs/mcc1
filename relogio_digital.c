@@ -16,73 +16,73 @@
 
 //informações para criar novos caracteres, armazenadas na memória flash
 const unsigned char novos_caract[]={0b00000001,//0
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00011111,
-                                            0b00011111,//1
-                                            0b00010000,
-                                            0b00010000,
-                                            0b00010000,
-                                            0b00010000,
-                                            0b00010000,
-                                            0b00010000,
-                                            0b00011111,//2
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,//3
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00011111,//4
-                                            0b00000000,
-                                            0b00000000,
-                                            0b00000000,
-                                            0b00000000,
-                                            0b00000000,
-                                            0b00011111,
-                                            0b00011111,//5
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00000001,
-                                            0b00011111,
-                                            0b00011111,//6
-                                            0b00000000,
-                                            0b00000000,
-                                            0b00000000,
-                                            0b00000000,
-                                            0b00000000,
-                                            0b00000000,
-                                            0b00011111,//7
-                                            0b00010000,
-                                            0b00010000,
-                                            0b00010000,
-                                            0b00010000,
-                                            0b00010000,
-                                            0b00011111};
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00011111,
+                                    0b00011111,//1
+                                    0b00010000,
+                                    0b00010000,
+                                    0b00010000,
+                                    0b00010000,
+                                    0b00010000,
+                                    0b00010000,
+                                    0b00011111,//2
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,//3
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00011111,//4
+                                    0b00000000,
+                                    0b00000000,
+                                    0b00000000,
+                                    0b00000000,
+                                    0b00000000,
+                                    0b00011111,
+                                    0b00011111,//5
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00000001,
+                                    0b00011111,
+                                    0b00011111,//6
+                                    0b00000000,
+                                    0b00000000,
+                                    0b00000000,
+                                    0b00000000,
+                                    0b00000000,
+                                    0b00000000,
+                                    0b00011111,//7
+                                    0b00010000,
+                                    0b00010000,
+                                    0b00010000,
+                                    0b00010000,
+                                    0b00010000,
+                                    0b00011111};
 
 const unsigned char nr_grande[11][4] = { {0x01, 0x02, 0x4C, 0x00}, //nr. 0
-                                                {0x20, 0x7C, 0x20, 0x7C}, //nr. 1
-                                                {0x04, 0x05, 0x4C, 0x5F}, //nr. 2
-                                                {0x06, 0x05, 0x5F, 0x00}, //nr. 3
-                                                {0x4C, 0x00, 0x20, 0x03}, //nr. 4
-                                                {0x07, 0x04, 0x5F, 0x00}, //nr. 5
-                                                {0x07, 0x04, 0x4C, 0x00}, //nr. 5
-                                                {0x06, 0x02, 0x20, 0x03}, //nr. 7
-                                                {0x07, 0x05, 0x4C, 0x00}, //nr. 8
-                                                {0x07, 0x05, 0x20, 0x03}, //nr. 9
-                                                {0x20, 0x20, 0x20, 0x20}};//vazio
+                                        {0x20, 0x7C, 0x20, 0x7C}, //nr. 1
+                                        {0x04, 0x05, 0x4C, 0x5F}, //nr. 2
+                                        {0x06, 0x05, 0x5F, 0x00}, //nr. 3
+                                        {0x4C, 0x00, 0x20, 0x03}, //nr. 4
+                                        {0x07, 0x04, 0x5F, 0x00}, //nr. 5
+                                        {0x07, 0x04, 0x4C, 0x00}, //nr. 5
+                                        {0x06, 0x02, 0x20, 0x03}, //nr. 7
+                                        {0x07, 0x05, 0x4C, 0x00}, //nr. 8
+                                        {0x07, 0x05, 0x20, 0x03}, //nr. 9
+                                        {0x20, 0x20, 0x20, 0x20}};//vazio
 
 
 //-----------------------------------------------------------------------------------------------------------
@@ -111,7 +111,18 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
      cmd_LCD(nr_grande[nr][2],1);
      cmd_LCD(nr_grande[nr][3],1);
 }
-
+//-----------------------------------------------------------------------------------------------------------
+const unsigned char customChar1[] = {
+  0b00000,
+  0b00100,
+  0b00000,
+  0b00000,
+  0b00000,
+  0b00000,
+  0b00100,
+  0b00000
+};
+//-----------------------------------------------------------------------------------------------------------
 int state, stop = 0;
 int dia_uni, mes_uni = 1;
 int dia_dez, mes_dez = 0;
@@ -149,6 +160,7 @@ int main(void)
 
     while(1)
     {
+        seg_uni++;
         switch(state)
         {
             case 0:             // início
@@ -162,8 +174,16 @@ int main(void)
             case 1:             // data (dd/mm/aa)
                 escreve_BIG(0x80,dia_dez);
                 escreve_BIG(0x82,dia_uni);
+                cmd_LCD(0x84,0);
+                cmd_LCD('/',1);
+                cmd_LCD(0xC4,0);
+                cmd_LCD('/',1);
                 escreve_BIG(0x85,mes_dez);
                 escreve_BIG(0x88,mes_uni);
+                cmd_LCD(0x8A,0);
+                cmd_LCD('/',1);
+                cmd_LCD(0xCA,0);
+                cmd_LCD('/',1);
                 escreve_BIG(0x8B,ano_dez);
                 escreve_BIG(0x8E,ano_uni);
 
@@ -202,12 +222,20 @@ int main(void)
             case 2:             // horário (hh:mm:ss)
                 escreve_BIG(0x80,hor_dez);
                 escreve_BIG(0x82,hor_uni);
+                cmd_LCD(0x84,0);
+                cmd_LCD('.',1);
+                cmd_LCD(0xC4,0);
+                cmd_LCD('.',1);
                 escreve_BIG(0x85,min_dez);
                 escreve_BIG(0x88,min_uni);
+                cmd_LCD(0x8A,0);
+                cmd_LCD('.',1);
+                cmd_LCD(0xCA,0);
+                cmd_LCD('.',1);
                 escreve_BIG(0x8B,seg_dez);
                 escreve_BIG(0x8E,seg_uni);
 
-                seg_uni++;
+                //seg_uni++;
                 if(seg_uni>9)
                 {
                     seg_uni = 0;
@@ -238,18 +266,18 @@ int main(void)
                 //__delay_cycles(1000000);
                 break;
             case 3:             // cronômetro (sss:ms)
-                escreve_BIG(0x80,s_cen);
-                escreve_BIG(0x82,s_dez);
-                escreve_BIG(0x85,s_uni);
-                escreve_BIG(0x88,10);
+                escreve_BIG(0x80,10);
+                escreve_BIG(0x82,s_cen);
+                escreve_BIG(0x85,s_dez);
+                escreve_BIG(0x88,s_uni);
                 escreve_BIG(0x8B,ms_dez);
                 escreve_BIG(0x8E,ms_uni);
                 if(stop)
                 {
-                    escreve_BIG(0x80,s_cen);
-                    escreve_BIG(0x82,s_dez);
-                    escreve_BIG(0x85,s_uni);
-                    escreve_BIG(0x88,10);
+                    escreve_BIG(0x80,10);
+                    escreve_BIG(0x82,s_cen);
+                    escreve_BIG(0x85,s_dez);
+                    escreve_BIG(0x88,s_uni);
                     escreve_BIG(0x8B,ms_dez);
                     escreve_BIG(0x8E,ms_uni);
 
