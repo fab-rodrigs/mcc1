@@ -113,9 +113,8 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
 }
 
 int state, stop = 0;
+int dia_uni, mes_uni = 1;
 int dia_dez, mes_dez = 0;
-int dia_uni = 1;
-int mes_uni = 4;
 int ano_dez = 2;
 int ano_uni = 4;
 int seg_uni, seg_dez, min_uni, min_dez, hor_uni, hor_dez = 0;
@@ -193,9 +192,7 @@ int main(void)
                                 ano_uni = 0;
                                 ano_dez++;
                                 if(ano_dez>9)
-                                {
                                     ano_dez = 9;
-                                }
                             }
                         }
                     }
@@ -274,9 +271,7 @@ int main(void)
                                     s_dez = 0;
                                     s_cen++;
                                     if(s_cen>9)
-                                    {
                                         s_cen = 9;
-                                    }
                                 }
                             }
                         }
@@ -301,7 +296,7 @@ __interrupt void Port_1(void)
 #pragma vector=PORT2_VECTOR
 __interrupt void Port_2(void)
 {
-    stop ^= 1;
+    stop ^= 1; // troca estado stop
     __delay_cycles(10000);
     P2IFG = 0; // limpa historico interrupção
 }
