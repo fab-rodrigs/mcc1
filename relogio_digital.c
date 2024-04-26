@@ -113,17 +113,8 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
      cmd_LCD(nr_grande[nr][3],1);
 }
 //-----------------------------------------------------------------------------------------------------------
-const unsigned char customChar1[] = {
-  0b00000,
-  0b00100,
-  0b00000,
-  0b00000,
-  0b00000,
-  0b00000,
-  0b00100,
-  0b00000
-};
-//-----------------------------------------------------------------------------------------------------------
+
+
 int state, stop = 0;
 int dia_uni, mes_uni = 1;
 int dia_dez, mes_dez = 0;
@@ -161,6 +152,8 @@ int main(void)
 
     while(1)
     {
+      // colocar toda lógica aqui, e no switch case apenas imprimir os valores (quando a hora passa de 23:59:59, dai incrementa no dia)
+      // no cronometro, o ms tem que ser mais rapido que o segundo, na real sla, tem que ficar na mesma base de tempo
         seg_uni++;
         switch(state)
         {
@@ -193,7 +186,7 @@ int main(void)
                 {
                     dia_uni = 0;
                     dia_dez++;
-                    if(dia_dez>2)
+                    if(dia_dez>=3 && dia_uni==0)
                     {
                         dia_uni = 1;
                         dia_dez = 0;
