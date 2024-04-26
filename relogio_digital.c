@@ -154,69 +154,36 @@ int main(void)
     {
       // colocar toda lógica aqui, e no switch case apenas imprimir os valores (quando a hora passa de 23:59:59, dai incrementa no dia)
       // no cronometro, o ms tem que ser mais rapido que o segundo, na real sla, tem que ficar na mesma base de tempo    
-        seg_uni++;
-        if(seg_uni>9)
-        {
-            seg_uni = 0;
-            seg_dez++;
-            if(seg_dez>5)
-            {
-                seg_dez = 0;
-                min_uni++;
-                if(min_uni>9)
-                {
-                    min_uni = 0;
-                    min_dez++;
-                    if(min_dez>5)
-                    {
-                        min_dez = 0;
-                        hor_uni++;
-                        if(hor_uni>9 && hor_dez<10)
-                        {
-                            hor_uni = 0;
-                            hor_dez++;
-                            if(hor_dez>5)
-                                hor_dez = 5;
-                        }
-                        else if(hor_uni==3 && hor_dez==2)
-                        {
-                            hor_uni = 0;
-                            hor_dez = 0;
-                            dia_uni++;
-                            if(dia_uni>9)
-                            {
-                                dia_uni = 0;
-                                dia_dez++;
-                                if(dia_dez>=3 && dia_uni==0)
-                                {
-                                    dia_uni = 1;
-                                    dia_dez = 0;
-                                    mes_uni++;
-                                    if(mes_uni>9 && mes_dez==0)
-                                    {
-                                        mes_uni = 0;
-                                        mes_dez++;
-                                    }
-                                    else if(mes_uni>2 && mes_dez==1)
-                                    {
-                                        mes_dez = 0;
-                                        mes_uni = 1;
-                                        ano_uni++;
-                                        if(ano_uni>9)
-                                        {
-                                            ano_uni = 0;
-                                            ano_dez++;
-                                            if(ano_dez>9)
-                                                ano_dez = 9;
-                                        }
-                                    }
-                                }
-                            }
+      
+        if (seg_uni++ > 9) seg_uni = 0;
+        if (seg_dez++ > 5) seg_dez = 0;
+        if (min_uni++ > 9) min_uni = 0;
+        if (min_dez++ > 5) min_dez = 0;
+        if (hor_uni++ > 9 && hor_dez < 10) hor_uni = hor_dez++ > 5 ? 0 : hor_uni;
+        if (hor_uni == 3 && hor_dez == 2) {
+            hor_uni = 0;
+            hor_dez = 0;
+            if (dia_uni++ > 9) {
+                dia_uni = 0;
+                if (dia_dez++ >= 3 && dia_uni == 0) {
+                    dia_uni = 1;
+                    dia_dez = 0;
+                    mes_uni++;
+                    if (mes_uni > 9 && mes_dez == 0) {
+                        mes_uni = 0;
+                        mes_dez++;
+                    } else if (mes_uni > 2 && mes_dez == 1) {
+                        mes_dez = 0;
+                        mes_uni = 1;
+                        if (ano_uni++ > 9) {
+                            ano_uni = 0;
+                            if (ano_dez++ > 9) ano_dez = 9;
                         }
                     }
                 }
             }
         }
+
       
         switch(state)
         {
