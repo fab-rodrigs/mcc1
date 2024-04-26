@@ -72,7 +72,7 @@ const unsigned char novos_caract[]={0b00000001,//0
                                     0b00010000,
                                     0b00011111};
 
-const unsigned char nr_grande[11][4] = { {0x01, 0x02, 0x4C, 0x00}, //nr. 0
+const unsigned char nr_grande[12][4] = { {0x01, 0x02, 0x4C, 0x00}, //nr. 0
                                         {0x20, 0x7C, 0x20, 0x7C}, //nr. 1
                                         {0x04, 0x05, 0x4C, 0x5F}, //nr. 2
                                         {0x06, 0x05, 0x5F, 0x00}, //nr. 3
@@ -82,6 +82,7 @@ const unsigned char nr_grande[11][4] = { {0x01, 0x02, 0x4C, 0x00}, //nr. 0
                                         {0x06, 0x02, 0x20, 0x03}, //nr. 7
                                         {0x07, 0x05, 0x4C, 0x00}, //nr. 8
                                         {0x07, 0x05, 0x20, 0x03}, //nr. 9
+                                        {0x01, 0x02, 0x4C, 0x00},
                                         {0x20, 0x20, 0x20, 0x20}};//vazio
 
 
@@ -164,12 +165,12 @@ int main(void)
         switch(state)
         {
             case 0:             // início
-                escreve_BIG(0x80,10);
-                escreve_BIG(0x82,10);
+                escreve_BIG(0x80,11);
+                escreve_BIG(0x82,11);
                 escreve_BIG(0x85,0);
                 escreve_BIG(0x88,0);
-                escreve_BIG(0x8B,10);
-                escreve_BIG(0x8E,10);
+                escreve_BIG(0x8B,11);
+                escreve_BIG(0x8E,11);
                 break;
             case 1:             // data (dd/mm/aa)
                 escreve_BIG(0x80,dia_dez);
@@ -266,10 +267,18 @@ int main(void)
                 //__delay_cycles(1000000);
                 break;
             case 3:             // cronômetro (sss:ms)
-                escreve_BIG(0x80,10);
+                escreve_BIG(0x80,11);
                 escreve_BIG(0x82,s_cen);
+                cmd_LCD(0x84,0);
+                cmd_LCD(' ',1);
+                cmd_LCD(0xC4,0);
+                cmd_LCD(' ',1);
                 escreve_BIG(0x85,s_dez);
                 escreve_BIG(0x88,s_uni);
+                cmd_LCD(0x8A,0);
+                cmd_LCD('.',1);
+                cmd_LCD(0xCA,0);
+                cmd_LCD('.',1);
                 escreve_BIG(0x8B,ms_dez);
                 escreve_BIG(0x8E,ms_uni);
                 if(stop)
