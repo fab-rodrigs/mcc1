@@ -153,9 +153,7 @@ int main(void)
     while(1)
     {
       // colocar toda lógica aqui, e no switch case apenas imprimir os valores (quando a hora passa de 23:59:59, dai incrementa no dia)
-      // no cronometro, o ms tem que ser mais rapido que o segundo, na real sla, tem que ficar na mesma base de tempo
-      
-        //__delay_cycles(1000000);
+      // no cronometro, o ms tem que ser mais rapido que o segundo, na real sla, tem que ficar na mesma base de tempo    
         seg_uni++;
         if(seg_uni>9)
         {
@@ -173,14 +171,14 @@ int main(void)
                     {
                         min_dez = 0;
                         hor_uni++;
-                        if(hor_uni>9 && hor_dez==0)
+                        if(hor_uni>9 && hor_dez<10)
                         {
                             hor_uni = 0;
                             hor_dez++;
                             if(hor_dez>5)
                                 hor_dez = 5;
                         }
-                        else if(hor_uni>3 && hor_dez==2)
+                        else if(hor_uni==3 && hor_dez==2)
                         {
                             hor_uni = 0;
                             hor_dez = 0;
@@ -261,6 +259,7 @@ int main(void)
                 cmd_LCD('.',1);
                 escreve_BIG(0x8B,seg_dez);
                 escreve_BIG(0x8E,seg_uni);
+                //__delay_cycles(1000000);
                 break;
             case 3:             // cronômetro (sss:ms)
                 escreve_BIG(0x80,11);
@@ -287,6 +286,7 @@ int main(void)
                     escreve_BIG(0x8E,ms_uni);
 
                     ms_uni++;
+                    //__delay_cycles(1000);
                     if(ms_uni>9)
                     {
                         ms_uni = 0;
@@ -310,7 +310,6 @@ int main(void)
                         }
                     }
                 }
-                //__delay_cycles(10000);
                 break;
         }
     }
