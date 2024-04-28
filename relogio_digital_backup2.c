@@ -116,7 +116,8 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
 
 
 int state, stop = 0;
-int dia_uni, mes_uni = 1;
+int dia_uni = 1;
+int mes_uni = 1;
 int dia_dez, mes_dez = 0;
 int ano_dez = 2;
 int ano_uni = 4;
@@ -152,8 +153,6 @@ int main(void)
 
     while(1)
     {
-      // colocar toda lógica aqui, e no switch case apenas imprimir os valores (quando a hora passa de 23:59:59, dai incrementa no dia)
-      // no cronometro, o ms tem que ser mais rapido que o segundo, na real sla, tem que ficar na mesma base de tempo    
         seg_uni++;
         if(seg_uni>9)
         {
@@ -217,7 +216,7 @@ int main(void)
                 }
             }
         }
-      
+
         switch(state)
         {
             case 0:             // início
