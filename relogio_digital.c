@@ -116,11 +116,19 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
 
 
 int state, stop = 0;
-int dia_uni, mes_uni = 1;
-int dia_dez, mes_dez = 0;
+int dia_uni = 0;
+int dia_dez = 3;
+int mes_uni = 2;
+int mes_dez = 1;
 int ano_dez = 2;
 int ano_uni = 4;
-int seg_uni, seg_dez, min_uni, min_dez, hor_uni, hor_dez = 0;
+
+int hor_dez = 2;
+int hor_uni = 3;
+int min_uni = 9;
+int min_dez = 5;
+int seg_uni, seg_dez = 0;
+
 int s_uni, s_dez, s_cen, ms_dez, ms_uni = 0;
 
 int main(void)
@@ -152,39 +160,70 @@ int main(void)
 
     while(1)
     {
-      // colocar toda lógica aqui, e no switch case apenas imprimir os valores (quando a hora passa de 23:59:59, dai incrementa no dia)
-      // no cronometro, o ms tem que ser mais rapido que o segundo, na real sla, tem que ficar na mesma base de tempo    
-      
-        if (seg_uni++ > 9) seg_uni = 0;
-        if (seg_dez++ > 5) seg_dez = 0;
-        if (min_uni++ > 9) min_uni = 0;
-        if (min_dez++ > 5) min_dez = 0;
-        if (hor_uni++ > 9 && hor_dez < 10) hor_uni = hor_dez++ > 5 ? 0 : hor_uni;
-        if (hor_uni == 3 && hor_dez == 2) {
-            hor_uni = 0;
-            hor_dez = 0;
-            if (dia_uni++ > 9) {
-                dia_uni = 0;
-                if (dia_dez++ >= 3 && dia_uni == 0) {
-                    dia_uni = 1;
-                    dia_dez = 0;
-                    mes_uni++;
-                    if (mes_uni > 9 && mes_dez == 0) {
-                        mes_uni = 0;
-                        mes_dez++;
-                    } else if (mes_uni > 2 && mes_dez == 1) {
-                        mes_dez = 0;
-                        mes_uni = 1;
-                        if (ano_uni++ > 9) {
-                            ano_uni = 0;
-                            if (ano_dez++ > 9) ano_dez = 9;
+        seg_uni++;
+        if(seg_uni>9)
+        {
+            seg_uni = 0;
+            seg_dez++;
+            if(seg_dez>5)
+            {
+                seg_dez = 0;
+                min_uni++;
+                if(min_uni>9)
+                {
+                    min_uni = 0;
+                    min_dez++;
+                    if(min_dez>5)
+                    {
+                        min_dez = 0;
+                        hor_uni++;
+                        if(hor_uni>9)
+                        {
+                            hor_uni = 0;
+                            hor_dez++;
+                            if(hor_dez>5)
+                                hor_dez = 5;
+                        }
+                        else if(hor_dez==2 && hor_uni==4)
+                        {
+                            hor_uni = 0;
+                            hor_dez = 0;
+                            dia_uni++;
+                            if(dia_uni>9)
+                            {
+                                dia_uni = 0;
+                                dia_dez++;
+                                if(dia_dez==3 && dia_uni==1) // RESOLVER A PARTIR DAQUI
+                                {
+                                    dia_uni = 1;
+                                    dia_dez = 0;
+                                    mes_uni++;
+                                    if(mes_uni>9 && mes_dez==0)
+                                    {
+                                        mes_uni = 0;
+                                        mes_dez++;
+                                    }
+                                    else if(mes_uni>2 && mes_dez==1)
+                                    {
+                                        mes_dez = 0;
+                                        mes_uni = 1;
+                                        ano_uni++;
+                                        if(ano_uni>9)
+                                        {
+                                            ano_uni = 0;
+                                            ano_dez++;
+                                            if(ano_dez>9)
+                                                ano_dez = 9;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
-      
         switch(state)
         {
             case 0:             // início
