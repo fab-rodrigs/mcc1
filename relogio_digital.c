@@ -117,6 +117,7 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
 
 int state, stop = 0;
 
+// Inicio no dia 29/12/23
 int dia_uni = 9;
 int dia_dez = 2;
 int mes_uni = 2;
@@ -124,6 +125,7 @@ int mes_dez = 1;
 int ano_dez = 2;
 int ano_uni = 3;
 
+// Inicio na hora 23:59:00
 int hor_dez = 2;
 int hor_uni = 3;
 int min_uni = 9;
@@ -156,15 +158,15 @@ int main(void)
     __bis_SR_register(GIE);     // Habilita interrupções globais
 
     set_bit(CONTR_LCD, BkL);
-    inic_LCD_4bits();           // inicializa o LCD
-    cria_novos_caract();        //cria os 8 novos caracteres
+    inic_LCD_4bits();           // Inicializa o LCD
+    cria_novos_caract();        // Cria os 8 novos caracteres
 
     while(1)
     {
         if(state == 1 || state == 2)
-            __delay_cycles(1000000); // tempo seg
+            __delay_cycles(1000000); // Tempo seg
         else
-            __delay_cycles(1000);    // tempo ms
+            __delay_cycles(1000);    // Tempo ms
         seg_uni++;
         if(seg_uni>9)
         {
