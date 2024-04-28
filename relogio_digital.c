@@ -116,6 +116,7 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
 
 
 int state, stop = 0;
+
 int dia_uni = 9;
 int dia_dez = 2;
 int mes_uni = 2;
@@ -161,9 +162,9 @@ int main(void)
     while(1)
     {
         if(state == 1 || state == 2)
-            __delay_cycles(1000000);
+            __delay_cycles(1000000); // tempo seg
         else
-            __delay_cycles(1000);
+            __delay_cycles(1000);    // tempo ms
         seg_uni++;
         if(seg_uni>9)
         {
