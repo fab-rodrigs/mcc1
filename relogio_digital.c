@@ -116,12 +116,12 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
 
 
 int state, stop = 0;
-int dia_uni = 0;
-int dia_dez = 3;
+int dia_uni = 9;
+int dia_dez = 2;
 int mes_uni = 2;
 int mes_dez = 1;
 int ano_dez = 2;
-int ano_uni = 4;
+int ano_uni = 3;
 
 int hor_dez = 2;
 int hor_uni = 3;
@@ -160,6 +160,10 @@ int main(void)
 
     while(1)
     {
+        if(state == 1 || state == 2)
+            __delay_cycles(1000000);
+        else
+            __delay_cycles(1000);
         seg_uni++;
         if(seg_uni>9)
         {
@@ -193,7 +197,7 @@ int main(void)
                             {
                                 dia_uni = 0;
                                 dia_dez++;
-                                if(dia_dez==3 && dia_uni==1) // RESOLVER A PARTIR DAQUI
+                                if(dia_dez>=3 && dia_uni==0)
                                 {
                                     dia_uni = 1;
                                     dia_dez = 0;
@@ -265,7 +269,6 @@ int main(void)
                 cmd_LCD('.',1);
                 escreve_BIG(0x8B,seg_dez);
                 escreve_BIG(0x8E,seg_uni);
-                //__delay_cycles(1000000);
                 break;
             case 3:             // cronômetro (sss:ms)
                 escreve_BIG(0x80,11);
@@ -292,7 +295,6 @@ int main(void)
                     escreve_BIG(0x8E,ms_uni);
 
                     ms_uni++;
-                    //__delay_cycles(1000);
                     if(ms_uni>9)
                     {
                         ms_uni = 0;
