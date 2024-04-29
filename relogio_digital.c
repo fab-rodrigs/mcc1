@@ -117,9 +117,9 @@ void escreve_BIG(unsigned char end, unsigned char nr)//escreve um número grande
 
 int state, stop = 0;
 
-// Inicio no dia 29/12/23
-int dia_uni = 9;
-int dia_dez = 2;
+// Inicio no dia 30/12/23
+int dia_uni = 0;
+int dia_dez = 3;
 int mes_uni = 2;
 int mes_dez = 1;
 int ano_dez = 2;
@@ -196,32 +196,32 @@ int main(void)
                             hor_uni = 0;
                             hor_dez = 0;
                             dia_uni++;
-                            if(dia_uni>9)
+                            if(dia_dez<3 && dia_uni>9)
                             {
                                 dia_uni = 0;
                                 dia_dez++;
-                                if(dia_dez>=3 && dia_uni==0)
+                            }
+                            else if(dia_dez==3 && dia_uni==1)
+                            {
+                                dia_uni = 1;
+                                dia_dez = 0;
+                                mes_uni++;
+                                if(mes_uni>9 && mes_dez==0)
                                 {
-                                    dia_uni = 1;
-                                    dia_dez = 0;
-                                    mes_uni++;
-                                    if(mes_uni>9 && mes_dez==0)
+                                    mes_uni = 0;
+                                    mes_dez++;
+                                }
+                                else if(mes_uni>2 && mes_dez==1)
+                                {
+                                    mes_dez = 0;
+                                    mes_uni = 1;
+                                    ano_uni++;
+                                    if(ano_uni>9)
                                     {
-                                        mes_uni = 0;
-                                        mes_dez++;
-                                    }
-                                    else if(mes_uni>2 && mes_dez==1)
-                                    {
-                                        mes_dez = 0;
-                                        mes_uni = 1;
-                                        ano_uni++;
-                                        if(ano_uni>9)
-                                        {
-                                            ano_uni = 0;
-                                            ano_dez++;
-                                            if(ano_dez>9)
-                                                ano_dez = 9;
-                                        }
+                                        ano_uni = 0;
+                                        ano_dez++;
+                                        if(ano_dez>9)
+                                            ano_dez = 9;
                                     }
                                 }
                             }
