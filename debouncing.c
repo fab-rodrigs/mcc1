@@ -65,17 +65,16 @@
 //******************************************************************************
 #include <msp430.h>
 
-int cont1, cont2 = 0;
-
+static int cont1 = 0;
+static int cont2 = 0;
 int main(void)
 {
   WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
-  P1DIR |= 0x01;                            // P1.0 output
   TA0CCTL0 = CCIE;                          // CCR0 interrupt enabled
   TA0CCR0 = 2;
-  TA0CTL = TASSEL_1 + MC_1 + TACLR;         // SMCLK, upmode, clear TAR
+  TA0CTL = TASSEL_2 + MC_1 + TACLR;         // SMCLK, upmode, clear TAR
 
-  P1DIR = 0b00000000;       // Define P1.0 como entrada
+  P1DIR = 0b00000001;       // Define P1.0 como entrada
   P1REN |= 0b00000010;        // Habilita o resistor de pull-up/pull-down para P1.1
   P1OUT |= 0b00000010;        // Configura P1.1 como pull-up (nível alto)
 
@@ -93,15 +92,19 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) TIMER0_A0_ISR (void)
 #error Compiler not supported!
 #endif
 {
-    if((P1IN & 0b00000010) == 0)
+    cont1++;
+    if(cont1==5225)
     {
-        cont1++;
-        if(cont1==5225*2)
+        cont1 = 0;
+        if((P1IN & 0b00000010) == 0)
         {
             cont2++;
             if(cont2==5)
                 P1OUT ^= 0x01;                            // Toggle P1.0
-            cont1 = 0;
+        }
+        else
+        {
+            cont2 = 0;
         }
     }
 }
