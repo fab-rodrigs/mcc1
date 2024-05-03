@@ -93,19 +93,16 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) TIMER0_A0_ISR (void)
 #error Compiler not supported!
 #endif
 {
-
-    cont1++;
-    if(cont1==5225*2)
-    {
-        cont1 = 0;
-    }
-
     if((P1IN & 0b00000010) == 0)
     {
-        cont2++;
-        if(cont2==5)
-            P1OUT ^= 0x01;                            // Toggle P1.0
+        cont1++;
+        if(cont1==5225*2)
+        {
+            cont2++;
+            if(cont2==5)
+                P1OUT ^= 0x01;                            // Toggle P1.0
+            cont1 = 0;
+        }
     }
-
 }
 
