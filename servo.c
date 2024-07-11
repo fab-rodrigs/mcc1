@@ -21,7 +21,7 @@ int main(void)
 	while(1)
 	{
 	    TA0CCR1 += 523;
-	    __delay_cycles(250000);
+	    __delay_cycles(500000);
 	    if(TA0CCR1 > 5*523)
 	    {
 	        TA0CCR1 = 0;
