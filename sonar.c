@@ -1,94 +1,95 @@
-/* --COPYRIGHT--,BSD_EX
- * Copyright (c) 2012, Texas Instruments Incorporated
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * *  Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * *  Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * *  Neither the name of Texas Instruments Incorporated nor the names of
- *    its contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *******************************************************************************
- *
- *                       MSP430 CODE EXAMPLE DISCLAIMER
- *
- * MSP430 code examples are self-contained low-level programs that typically
- * demonstrate a single peripheral function or device feature in a highly
- * concise manner. For this the code may rely on the device's power-on default
- * register values and settings such as the clock configuration and care must
- * be taken when combining code from several examples to avoid potential side
- * effects. Also see www.ti.com/grace for a GUI- and www.ti.com/msp430ware
- * for an API functional library-approach to peripheral configuration.
- *
- * --/COPYRIGHT--*/
-//*******************************************************************************
-//  MSP430F552x Demo - Timer0_A5, PWM TA1.1-2, Up Mode, DCO SMCLK
-//
-//  Description: This program generates two PWM outputs on P1.2,P1.3 using
-//  Timer1_A configured for up mode. The value in CCR0, 512-1, defines the PWM
-//  period and the values in CCR1 and CCR2 the PWM duty cycles. Using ~1.045MHz
-//  SMCLK as TACLK, the timer period is ~500us with a 75% duty cycle on P1.2
-//  and 25% on P1.3.
-//  ACLK = n/a, SMCLK = MCLK = TACLK = default DCO ~1.045MHz.
-//
-//                MSP430F552x
-//            -------------------
-//        /|\|                   |
-//         | |                   |
-//         --|RST                |
-//           |                   |
-//           |         P1.2/TA0.1|--> CCR1 - PWM - SERVO
-//           |         P1.3/TA0.2|--> CCR2 - PWM
-//
-//   Bhargavi Nisarga
-//   Texas Instruments Inc.
-//   April 2009
-//   Built with CCSv4 and IAR Embedded Workbench Version: 4.21
-//******************************************************************************
-
 #include <msp430.h>
+/* Tipos uint16_t, uint8_t, ... */
+#include <stdint.h>
 
-int main(void)
+
+/* Variáveis globais */
+volatile unsigned int rise_timestamp = 0;
+volatile unsigned int fall_timestamp = 0;
+volatile unsigned int interval = 0;
+volatile unsigned int dist = 0;
+
+void main(void)
 {
-  WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
-  P1DIR |= BIT2+BIT3;                       // P1.2 and P1.3 output
-  P1SEL |= BIT2+BIT3;                       // P1.2 and P1.3 options select
-  TA0CCR0 = 20900-1;                          // PWM Period
-  TA0CCTL1 = OUTMOD_7;                      // CCR1 reset/set
-  TA0CCR1 = 523;                            // CCR1 PWM duty cycle
-  TA0CCTL2 = OUTMOD_7;                      // CCR2 reset/set
-  //TA0CCR2 = 128;                            // CCR2 PWM duty cycle
-  TA0CTL = TASSEL_2 + MC_1 + TACLR;         // SMCLK, up mode, clear TAR
+    // Para o watchdog timer
+    WDTCTL = WDTPW | WDTHOLD;
 
-  //__bis_SR_register(LPM0_bits);             // Enter LPM0
-  __no_operation();                         // For debugger
-  while(1)
+    TA0CTL = TASSEL_2 | MC_2 | TACLR;
+        /* TASSEL_2 ->  Timer A clock source select: 2 - SMCLK
+         * MC_2 ->  Timer A mode control: 2 - Continous up
+         * TACLR ->  Timer A counter clear
+         * Configuração da fonte do clock do timer 1 */
+
+    TA0CCTL1 = CAP | CCIS_0 | CM_3 | SCS | CCIS_0 | CCIE;
+    /* Timer tipo A:
+     * CAP ->  Capture mode
+     * CM_3 ->  Capture mode: both edges
+     * SCS -> Capture sychronize
+     * CCIS_0 -> Capture input select: 0 - CCIxA
+     * CCIE -> Capture/compare interrupt enable
+     * Configura comparador 0 do timer 1 para captura */
+
+    P1DIR = BIT0 + BIT4; // P1.0 e P1.4 como saída
+
+    /* Pull down em P1.2 e habilita TA0.1 capture compare */
+    P1REN = BIT2;
+    P1SEL = BIT2;
+
+    __bis_SR_register(GIE);
+
+    //P1OUT &= ~BIT0;
+
+    while(1)
+    {
+        // pulso de 10us para iniciar leitura do sonar
+        P1OUT |= BIT4;
+        __delay_cycles(10);
+        P1OUT &= ~BIT4;
+
+        __delay_cycles(500000);
+
+    }
+}
+
+
+
+// Timer0_A5 Interrupt Vector (TAIV) handler
+#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
+#pragma vector=TIMER0_A1_VECTOR
+__interrupt void TIMER0_A1_ISR(void)
+#elif defined(__GNUC__)
+void __attribute__ ((interrupt(TIMER0_A1_VECTOR))) TIMER0_A1_ISR (void)
+#else
+#error Compiler not supported!
+#endif
+{
+  switch(__even_in_range(TA0IV,14))
   {
-      TA0CCR1 += 523;
-      __delay_cycles(250000);
-      if(TA0CCR1 > 5*523)
-          TA0CCR1 = 523;
+    case  0: break;                          // No interrupt
+    case  2:                                 // CCR1 used
 
+        if (TA0CCTL1 & CCI)                 /* Borda de subida */
+        {
+            rise_timestamp = TA0CCR1;
+        }
+        else                                /* Borda de descida */
+        {
+            fall_timestamp = TA0CCR1;
+            interval = fall_timestamp - rise_timestamp;
+            dist = interval / 58;
+            if(dist < 20)
+                P1OUT |= BIT0;
+            else
+                P1OUT &= ~BIT0;
+        }
+
+    case  4: break;                          // CCR2 not used
+    case  6: break;                          // reserved
+    case  8: break;                          // reserved
+    case 10: break;                          // reserved
+    case 12: break;                          // reserved
+    case 14: P1OUT ^= 0x01;                  // overflow
+             break;
+    default: break;
   }
 }
